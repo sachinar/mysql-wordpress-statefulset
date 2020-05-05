@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress
+  labels:
+    app: wordpress
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+#      nodePort: 32408
+  selector:
+    app: wordpress
+    tier: frontend
+#  type: NodePort
+---
+#apiVersion: v1
+#kind: PersistentVolumeClaim
+#metadata:
+#  name: wp-pv-claim1
+#  labels:
+#    app: wordpress
+#spec:
+#  accessModes:
+#    - ReadWriteOnce
+#  resources:
+#    requests:
+#      storage: 20Gi
+#---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: wordpress
+  labels:
+    app: wordpress
+spec:
+  selector:
+    matchLabels:
+      app: wordpress
+      tier: frontend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: wordpress
+        tier: frontend
+    spec:
+      containers:
+              #- image: wordpress:4.8-apache
+      - image: wordpress:latest
+        name: wordpress
+        env:
+        - name: WORDPRESS_DB_HOST
+          value: mysql-read
+        - name: PHP_INI_SCAN_DIR
+          value: :/usr/local/etc/php/conf.custom
+        - name: WORDPRESS_DB_PASSWORD
+          value: 
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: MYSQL_ROOT_PASSWORD 
+        ports:
+        - containerPort: 80
+          name: wordpress
+        volumeMounts:
+#        - name: wordpress-persistent-storage
+#          mountPath: /var/www/html
+        - name: php-config
+          mountPath: /usr/local/etc/php/conf.custom
+      volumes:
+#      - name: wordpress-persistent-storage
+#        persistentVolumeClaim:
+#          claimName: wp-pv-claim1
+      - name: php-config
+        configMap:
+          name: wordpress-php-config

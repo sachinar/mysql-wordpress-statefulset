@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wordpress-php-config
+  namespace: default
+data:
+  wordpress-custom.ini: |-
+    upload_max_filesize = 2048M
+    post_max_size = 2048M
+  another-one.ini: |-
+    some_other_php_stuff = true

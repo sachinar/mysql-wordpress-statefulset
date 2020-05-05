@@ -1,2 +1,2 @@
-# mysql-wordpress-statefulset
+# mysql wordpress statefulset
 Sample mysql wordpress statefulset

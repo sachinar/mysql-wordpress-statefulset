@@ -3,8 +3,8 @@ kind: Ingress
 metadata:
   name: basic-ingress
 #  namespace: monitoring
-  annotations:
-    kubernetes.io/tls-acme="true"
+#  annotations:
+#    kubernetes.io/tls-acme="true"
 #    kubernetes.io/ingress.allow-http: "false"
 spec:
   backend:

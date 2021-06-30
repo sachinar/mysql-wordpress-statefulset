@@ -1,28 +1,12 @@
-#apiVersion: networking.k8s.io/v1beta1
-#kind: Ingress
-#metadata:
-#  name: my-ingress
-#  annotations:
-#    kubernetes.io/ingress.class: nginx
-#spec:
-#  rules:
-#  - http:
-#      paths:
-#      - path: /
-#        backend:
-#          serviceName: wordpress
-#          servicePort: 80
----
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: wordpress
-  labels:
-    app: wordpress
+  name: basic-ingress
+#  namespace: monitoring
+  annotations:
+    kubernetes.io/tls-acme="true"
+#    kubernetes.io/ingress.allow-http: "false"
 spec:
-  rules:
-  - http:
-      paths:
-      - backend:
-          serviceName: wordpress
-          servicePort: 80
+  backend:
+    serviceName: wordpress 
+    servicePort: 80

@@ -9,7 +9,7 @@ spec:
     - port: 80
       protocol: TCP
       targetPort: 80
-#      nodePort: 31490
+#      nodePort: 30000
   selector:
     app: wordpress
     tier: frontend
@@ -67,14 +67,30 @@ spec:
           name: wordpress
         livenessProbe:
           httpGet:
-            path: /wp-login.php
+            path: /wp-admin/install.php
             port: 80
-          initialDelaySeconds: 10
+            scheme: HTTP
+#            httpHeaders:
+#            - name: X-Forwarded-Proto
+#              value: https
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 6
+          successThreshold: 1
         readinessProbe:
           httpGet:
             path: /wp-login.php
             port: 80
-          initialDelaySeconds: 10
+            scheme: HTTP
+#            httpHeaders:
+#            - name: X-Forwarded-Proto
+#              value: https
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 6
+          successThreshold: 1
 
         volumeMounts:
 #        - name: wordpress-persistent-storage
